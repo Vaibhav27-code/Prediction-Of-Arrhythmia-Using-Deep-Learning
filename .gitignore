@@ -8,6 +8,16 @@ dist/
 build/
 .eggs/
 
+# Debug / dev scripts
+debug_model.py
+debug_output.txt
+1.py
+
+# Test / data outputs
+Testreport.csv
+predictions.csv
+synthetic_ecg_dataset.csv
+
 # Virtual environments
 venv/
 .venv/
