@@ -1,0 +1,202 @@
+/* ── Variables ───────────────────────────────────────── */
+:root {
+    --primary:      #4f46e5;
+    --secondary:    #06b6d4;
+    --background:   #f8fafc;
+    --white:        #ffffff;
+    --text-primary: #1e293b;
+    --text-secondary: #64748b;
+    --border:       #e2e8f0;
+    --error:        #ef4444;
+    --success:      #10b981;
+    --shadow-sm:    0 1px 3px rgba(0,0,0,.1);
+    --shadow-md:    0 4px 6px -1px rgba(0,0,0,.1);
+    --shadow-lg:    0 20px 60px rgba(0,0,0,.15);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: var(--background);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ── Wrapper ─────────────────────────────────────────── */
+.container { width: 100%; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 1rem; }
+
+.register-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    width: 100%;
+    max-width: 900px;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: var(--shadow-lg);
+}
+
+/* ── Left panel ──────────────────────────────────────── */
+.register-left {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+    padding: 3rem 2.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.brand-logo {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: #fff;
+}
+
+.brand-logo i { font-size: 1.8rem; animation: pulse 2s infinite; }
+
+.brand-tagline {
+    color: rgba(255,255,255,.8);
+    margin-top: 1rem;
+    font-size: .95rem;
+    line-height: 1.6;
+}
+
+/* ECG animation */
+.ecg-animation { margin-top: 2.5rem; }
+
+.ecg-line { width: 100%; height: auto; }
+
+.ecg {
+    fill: none;
+    stroke: rgba(255,255,255,.6);
+    stroke-width: 2.5;
+    stroke-dasharray: 900;
+    stroke-dashoffset: 900;
+    animation: draw 3s ease forwards infinite;
+}
+
+@keyframes draw {
+    to { stroke-dashoffset: 0; }
+}
+
+/* ── Right panel ─────────────────────────────────────── */
+.register-right {
+    background: var(--white);
+    padding: 2.5rem 2.5rem;
+    overflow-y: auto;
+    max-height: 100vh;
+}
+
+.register-header { margin-bottom: 1.5rem; }
+.register-header h1 { font-size: 1.6rem; font-weight: 600; color: var(--text-primary); }
+.register-header p  { color: var(--text-secondary); font-size: .9rem; margin-top: .25rem; }
+
+/* ── Alerts ──────────────────────────────────────────── */
+.alert-container { margin-bottom: 1rem; }
+
+.alert {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    padding: .75rem 1rem;
+    border-radius: 10px;
+    font-size: .9rem;
+    margin-bottom: .5rem;
+}
+
+.alert-error   { background: #fee2e2; color: #b91c1c; }
+.alert-success { background: #d1fae5; color: #065f46; }
+
+/* ── Form ────────────────────────────────────────────── */
+.register-form   { display: flex; flex-direction: column; gap: .85rem; }
+
+.form-group      { display: flex; flex-direction: column; }
+
+.field-label     { font-size: .82rem; color: var(--text-secondary); margin-bottom: .3rem; }
+
+.input-wrapper {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    background: var(--background);
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: .75rem 1rem;
+    transition: border-color .3s;
+}
+
+.input-wrapper:focus-within { border-color: var(--primary); background: var(--white); }
+
+.input-wrapper i  { color: var(--text-secondary); width: 18px; flex-shrink: 0; }
+
+.input-wrapper input {
+    flex: 1;
+    border: none;
+    background: transparent;
+    font-family: 'Poppins', sans-serif;
+    font-size: .95rem;
+    color: var(--text-primary);
+    outline: none;
+}
+
+.input-wrapper input::placeholder { color: #94a3b8; }
+
+.toggle-password {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-secondary);
+    padding: 0;
+    line-height: 1;
+}
+
+/* ── Divider ─────────────────────────────────────────── */
+.form-divider {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    margin: .25rem 0 .1rem;
+}
+.form-divider::before,
+.form-divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+.form-divider span { font-size: .78rem; color: var(--text-secondary); white-space: nowrap; }
+
+/* ── Submit button ───────────────────────────────────── */
+.register-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: .5rem;
+    margin-top: .5rem;
+    padding: .9rem 1.5rem;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: var(--white);
+    border: none;
+    border-radius: 12px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all .3s;
+}
+
+.register-button:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+
+/* ── Login link ──────────────────────────────────────── */
+.login-link { text-align: center; font-size: .88rem; color: var(--text-secondary); margin-top: .5rem; }
+.login-link a { color: var(--primary); font-weight: 500; text-decoration: none; }
+.login-link a:hover { text-decoration: underline; }
+
+/* ── Animations ──────────────────────────────────────── */
+@keyframes pulse { 0%,100%{ transform:scale(1); } 50%{ transform:scale(1.1); } }
+
+/* ── Responsive ──────────────────────────────────────── */
+@media (max-width: 700px) {
+    .register-wrapper { grid-template-columns: 1fr; }
+    .register-left    { display: none; }
+    .register-right   { padding: 2rem 1.5rem; }
+}

@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health Assessment Result | ArrhythmiaAI</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --secondary: #06b6d4;
+            --background: #f8fafc;
+            --white: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --success: #10b981;
+            --error: #ef4444;
+            --warning: #f59e0b;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, .1);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, .1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, .1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--background);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+
+        /* ── Navbar ── */
+        .navbar {
+            background: var(--white);
+            padding: 1rem 2rem;
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: .75rem;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .nav-brand i {
+            animation: pulse 2s infinite;
+        }
+
+        .nav-link {
+            padding: .6rem 1.2rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--white);
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: 500;
+            font-size: .9rem;
+            transition: all .3s;
+        }
+
+        .nav-link:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        /* ── Layout ── */
+        .container {
+            max-width: 800px;
+            margin: 3rem auto;
+            padding: 0 1.5rem;
+        }
+
+        .result-card {
+            background: var(--white);
+            border-radius: 24px;
+            padding: 2.5rem;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .result-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .result-header h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .result-header p {
+            color: var(--text-secondary);
+            margin-top: .3rem;
+        }
+
+        /* ── Status badge ── */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: .5rem;
+            padding: .6rem 1.4rem;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin: .5rem 0 1.5rem;
+        }
+
+        .status-badge.normal {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .status-badge.arrhythmia {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        /* ── Section boxes ── */
+        .section {
+            border-radius: 14px;
+            padding: 1.2rem 1.5rem;
+            margin-bottom: 1.2rem;
+        }
+
+        .section h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: .4rem;
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+        }
+
+        .section p {
+            font-size: .95rem;
+            line-height: 1.6;
+        }
+
+        .section-suggestion {
+            background: #eff6ff;
+            border-left: 4px solid #3b82f6;
+        }
+
+        .section-suggestion h3 {
+            color: #1d4ed8;
+        }
+
+        .section-arrhythmia {
+            background: #fff1f2;
+            border-left: 4px solid var(--error);
+        }
+
+        .section-arrhythmia h3 {
+            color: #b91c1c;
+        }
+
+        .section-precautions {
+            background: #f0fdf4;
+            border-left: 4px solid var(--success);
+        }
+
+        .section-precautions h3 {
+            color: #15803d;
+        }
+
+        /* ── Actions ── */
+        .actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            flex: 1;
+            min-width: 140px;
+            padding: .85rem 1.2rem;
+            border-radius: 12px;
+            font-family: 'Poppins', sans-serif;
+            font-size: .95rem;
+            font-weight: 500;
+            text-align: center;
+            text-decoration: none;
+            cursor: pointer;
+            border: none;
+            transition: all .3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--error);
+            color: var(--error);
+        }
+
+        .btn-outline:hover {
+            background: var(--error);
+            color: var(--white);
+            transform: translateY(-2px);
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.1);
+            }
+        }
+
+        @media (max-width: 600px) {
+            .result-card {
+                padding: 1.5rem;
+            }
+
+            .result-header h1 {
+                font-size: 1.4rem;
+            }
+
+            .actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="nav-brand">
+            <i class="fas fa-heartbeat"></i>
+            <span>ArrhythmiaAI</span>
+        </div>
+        <a href="{{ url_for('logout') }}" class="nav-link">
+            <i class="fas fa-sign-out-alt"></i> Logout
+        </a>
+    </nav>
+
+    <div class="container">
+        <div class="result-card">
+            <div class="result-header">
+                <h1>Health Assessment Result</h1>
+                <p>Prediction of Arrhythmia using Deep Learning (CNN)</p>
+
+                <!-- Status Badge -->
+                {% if ecg_result == 'Arrhythmia' %}
+                <div style="text-align:center">
+                    <span class="status-badge arrhythmia">
+                        <i class="fas fa-triangle-exclamation"></i> {{ ecg_result }} Detected
+                    </span>
+                </div>
+                {% else %}
+                <div style="text-align:center">
+                    <span class="status-badge normal">
+                        <i class="fas fa-circle-check"></i> {{ ecg_result }} Rhythm
+                    </span>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Diagnostic Suggestion -->
+            <div class="section section-suggestion">
+                <h3><i class="fas fa-stethoscope"></i> Diagnostic Assessment</h3>
+                <p>{{ suggestion }}</p>
+            </div>
+
+            <!-- Arrhythmia details (only shown when detected) -->
+            {% if ecg_result == 'Arrhythmia' %}
+            <div class="section section-arrhythmia">
+                <h3><i class="fas fa-heart-circle-exclamation"></i> Recommended Action</h3>
+                <p>{{ cure }}</p>
+            </div>
+            {% endif %}
+
+            <!-- Precautions (always shown) -->
+            <div class="section section-precautions">
+                <h3><i class="fas fa-shield-heart"></i> Precautions &amp; Lifestyle</h3>
+                <p>{{ precautions }}</p>
+            </div>
+
+            <!-- Actions -->
+            <div class="actions">
+                <a href="{{ url_for('index') }}" class="btn btn-primary">
+                    <i class="fas fa-arrow-left"></i> New Prediction
+                </a>
+                <a href="{{ url_for('logout') }}" class="btn btn-outline">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

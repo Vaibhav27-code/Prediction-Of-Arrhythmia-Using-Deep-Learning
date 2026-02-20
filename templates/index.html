@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ECG Arrhythmia Predictor</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4f46e5;
+            --secondary: #06b6d4;
+            --background: #f8fafc;
+            --white: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --border: #e2e8f0;
+            --success: #10b981;
+            --error: #ef4444;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, .1);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, .1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, .1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--background);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+
+        /* ── Navbar ── */
+        .navbar {
+            background: var(--white);
+            padding: 1rem 2rem;
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: .75rem;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .nav-brand i {
+            font-size: 1.5rem;
+            animation: pulse 2s infinite;
+        }
+
+        .logout-button {
+            padding: .65rem 1.4rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--white);
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 500;
+            font-size: .9rem;
+            transition: all .3s;
+        }
+
+        .logout-button:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        /* ── Page ── */
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
+
+        .page-title {
+            text-align: center;
+            margin-bottom: 1.8rem;
+            font-size: 1.9rem;
+            font-weight: 600;
+        }
+
+        .page-title span {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* ── Two-col layout ── */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 1.5rem;
+            align-items: start;
+        }
+
+        /* ── ECG Image Card ── */
+        .ecg-card {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .ecg-card h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+        }
+
+        .ecg-card img {
+            width: 100%;
+            border-radius: 12px;
+            display: block;
+        }
+
+        /* ── Input Form Card ── */
+        .form-card {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 1.8rem;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .form-card h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--text-primary);
+        }
+
+        /* ── Individual ECG Field ── */
+        .ecg-field {
+            margin-bottom: 1.1rem;
+        }
+
+        .field-label {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: .35rem;
+        }
+
+        .field-label span {
+            font-size: .88rem;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .field-hint {
+            font-size: .75rem;
+            color: var(--text-secondary);
+            background: #f1f5f9;
+            padding: .15rem .5rem;
+            border-radius: 6px;
+        }
+
+        .field-input-wrap {
+            display: flex;
+            align-items: center;
+            gap: .6rem;
+            background: var(--background);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: .7rem 1rem;
+            transition: border-color .25s, box-shadow .25s;
+        }
+
+        .field-input-wrap:focus-within {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, .1);
+            background: var(--white);
+        }
+
+        .field-input-wrap .icon {
+            color: var(--primary);
+            width: 20px;
+            flex-shrink: 0;
+        }
+
+        .field-input-wrap input {
+            flex: 1;
+            border: none;
+            background: transparent;
+            font-family: 'Poppins', sans-serif;
+            font-size: .95rem;
+            color: var(--text-primary);
+            outline: none;
+        }
+
+        .field-input-wrap input::placeholder {
+            color: #94a3b8;
+        }
+
+        .field-unit {
+            font-size: .78rem;
+            color: var(--text-secondary);
+            flex-shrink: 0;
+        }
+
+        /* ── Predict Button ── */
+        .predict-btn {
+            width: 100%;
+            margin-top: 1.4rem;
+            padding: 1rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--white);
+            border: none;
+            border-radius: 14px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            letter-spacing: .3px;
+            transition: all .3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: .6rem;
+        }
+
+        .predict-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(79, 70, 229, .3);
+        }
+
+        .predict-btn:disabled {
+            opacity: .6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* ── Error alert ── */
+        .alert-error {
+            display: none;
+            margin-top: 1rem;
+            padding: .8rem 1rem;
+            background: #fee2e2;
+            color: #b91c1c;
+            border-radius: 10px;
+            font-size: .88rem;
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+        }
+
+        .alert-error.hidden {
+            display: none !important;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.1);
+            }
+        }
+
+        @media (max-width: 800px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="nav-brand">
+            <i class="fas fa-heartbeat"></i>
+            <span>ArrhythmiaAI</span>
+        </div>
+        <a href="{{ url_for('logout') }}" class="logout-button">
+            <i class="fas fa-sign-out-alt"></i> Logout
+        </a>
+    </nav>
+
+    <div class="container">
+        <h1 class="page-title">ECG <span>Arrhythmia Predictor</span></h1>
+
+        <div class="main-grid">
+
+            <!-- Left: ECG Reference Image -->
+            <div class="ecg-card">
+                <h3><i class="fas fa-wave-square"></i> ECG Reference Diagram</h3>
+                <img src="{{ url_for('static', filename='images/ECG.jpg') }}" alt="ECG Diagram showing P, QRS, T waves">
+            </div>
+
+            <!-- Right: Input Form -->
+            <div class="form-card">
+                <h3><i class="fas fa-keyboard"></i> Enter ECG Parameters <span
+                        style="font-weight:400; color:var(--text-secondary); font-size:.85rem;">(in seconds)</span></h3>
+
+                <!-- RR Interval -->
+                <div class="ecg-field">
+                    <div class="field-label">
+                        <span><i class="fas fa-arrows-left-right" style="color:var(--primary)"></i> RR Interval</span>
+                        <span class="field-hint">0.3 – 2.0 s</span>
+                    </div>
+                    <div class="field-input-wrap">
+                        <i class="fas fa-ruler-horizontal icon"></i>
+                        <input type="number" id="input-rr-interval" placeholder="e.g. 0.80" step="0.01" min="0.3"
+                            max="2.0">
+                        <span class="field-unit">s</span>
+                    </div>
+                </div>
+
+                <!-- P Wave -->
+                <div class="ecg-field">
+                    <div class="field-label">
+                        <span><i class="fas fa-wave-square" style="color:#8b5cf6"></i> P Wave</span>
+                        <span class="field-hint">0.05 – 0.25 s</span>
+                    </div>
+                    <div class="field-input-wrap">
+                        <i class="fas fa-ruler-horizontal icon" style="color:#8b5cf6"></i>
+                        <input type="number" id="input-p-wave" placeholder="e.g. 0.10" step="0.01" min="0.05"
+                            max="0.25">
+                        <span class="field-unit">s</span>
+                    </div>
+                </div>
+
+                <!-- QRS Complex -->
+                <div class="ecg-field">
+                    <div class="field-label">
+                        <span><i class="fas fa-bolt" style="color:#ef4444"></i> QRS Complex</span>
+                        <span class="field-hint">0.05 – 0.30 s</span>
+                    </div>
+                    <div class="field-input-wrap">
+                        <i class="fas fa-ruler-horizontal icon" style="color:#ef4444"></i>
+                        <input type="number" id="input-qrs-complex" placeholder="e.g. 0.10" step="0.01" min="0.05"
+                            max="0.30">
+                        <span class="field-unit">s</span>
+                    </div>
+                </div>
+
+                <!-- T Wave -->
+                <div class="ecg-field">
+                    <div class="field-label">
+                        <span><i class="fas fa-wave-square" style="color:#10b981"></i> T Wave</span>
+                        <span class="field-hint">0.05 – 0.40 s</span>
+                    </div>
+                    <div class="field-input-wrap">
+                        <i class="fas fa-ruler-horizontal icon" style="color:#10b981"></i>
+                        <input type="number" id="input-t-wave" placeholder="e.g. 0.16" step="0.01" min="0.05"
+                            max="0.40">
+                        <span class="field-unit">s</span>
+                    </div>
+                </div>
+
+                <!-- QT Interval -->
+                <div class="ecg-field">
+                    <div class="field-label">
+                        <span><i class="fas fa-arrows-left-right" style="color:#f59e0b"></i> QT Interval</span>
+                        <span class="field-hint">0.20 – 0.70 s</span>
+                    </div>
+                    <div class="field-input-wrap">
+                        <i class="fas fa-ruler-horizontal icon" style="color:#f59e0b"></i>
+                        <input type="number" id="input-qt-interval" placeholder="e.g. 0.40" step="0.01" min="0.20"
+                            max="0.70">
+                        <span class="field-unit">s</span>
+                    </div>
+                </div>
+
+                <!-- Error Alert -->
+                <div class="alert-error hidden" id="error-alert">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <span id="error-msg"></span>
+                </div>
+
+                <!-- Predict Button -->
+                <button class="predict-btn" id="predict-btn" onclick="predictArrhythmia()">
+                    <i class="fas fa-heart-pulse"></i> Analyse ECG
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        function showError(msg) {
+            const alert = document.getElementById('error-alert');
+            document.getElementById('error-msg').textContent = msg;
+            alert.classList.remove('hidden');
+        }
+        function hideError() {
+            document.getElementById('error-alert').classList.add('hidden');
+        }
+
+        function predictArrhythmia() {
+            hideError();
+
+            const fields = {
+                rr_interval: document.getElementById('input-rr-interval').value,
+                p_wave: document.getElementById('input-p-wave').value,
+                qrs_complex: document.getElementById('input-qrs-complex').value,
+                t_wave: document.getElementById('input-t-wave').value,
+                qt_interval: document.getElementById('input-qt-interval').value,
+            };
+
+            for (const [key, val] of Object.entries(fields)) {
+                if (val === '' || val === null) {
+                    showError('Please fill in all 5 ECG fields before predicting.');
+                    return;
+                }
+            }
+
+            const btn = document.getElementById('predict-btn');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Analysing…';
+
+            fetch('/predict', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify(fields)
+            })
+                .then(r => r.json())
+                .then(data => {
+                    if (data.redirect) {
+                        window.location.href = data.redirect;
+                    } else if (data.error) {
+                        showError(data.error);
+                        btn.disabled = false;
+                        btn.innerHTML = '<i class="fas fa-heart-pulse"></i> Analyse ECG';
+                    }
+                })
+                .catch(() => {
+                    showError('Network error. Please try again.');
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fas fa-heart-pulse"></i> Analyse ECG';
+                });
+        }
+    </script>
+</body>
+
+</html>

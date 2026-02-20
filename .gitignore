@@ -1,0 +1,44 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Virtual environments
+venv/
+.venv/
+env/
+.env
+
+# Flask / SQLite
+instance/
+*.db
+*.sqlite3
+app.log
+
+# Secrets
+.env
+
+# ML artifacts (large files — regenerate by running train_model.py)
+cnn_ecg_model.h5
+scaler.pkl
+label_encoder.pkl
+
+# MIT-BIH downloaded data (large — auto-downloaded by train_model.py)
+mitbih_data/
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
